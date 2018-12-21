@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{title}}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+    <style>
+        .future-item .con {
+            display: inline-block;
+            vertical-align: middle;
+            width: 60px
+        }
+        .future-item .con.name-con {
+            width: 140px
+        }
+        a.future-item {
+            padding: 10px 0;
+            display: block;
+            border-bottom: 1px solid #e7e7e7;
+        }
+        #time {
+            padding: 14px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div id="time" class="col-sm-6">
+        </div>
+        <div id="container" class="col-sm-6">
+        </div>
+    </div>
+</div>
+<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<script>
+    (function($, expose) {
+        debugger;
+        $('#time').html(moment().format('HH:mm:ss'));
+        var $con = $('#container');
+        var arr = JSON.parse('{{data}}'.replace(/&#34;/g, '"'));
+        arr.sort(function(a, b) {
+            return parseInt(b.value) - parseInt(a.value);
+        });
+        var kind_name_rel = {
+            'ap': '苹果',
+            'sm': '锰硅',
+            'rm': '菜粕',
+            'bu': '沥青',
+            'zc': '郑煤',
+            'v9': 'pvc',
+            'hc': '热卷',
+            'rb': '螺纹',
+            'cf': '郑棉',
+            'ma': '郑醇',
+            'sf': '硅铁',
+            'ta': 'pta',
+            'jm': '焦煤',
+            'l9': '塑料',
+            'm9': '豆粕',
+            'pp': 'pp',
+            'fu': '燃油'
+        };
+        for(var i = 0, leni = arr.length; i < leni; i++) {
+            var item = arr[i], security = item.security, kind = security.substring(0, 2).toLowerCase();
+            var rate = item.rate + '';
+            var rate = rate.substring(0, 4);
+            $con.append([
+            '<a href="http://212.64.7.83:5288/candle_sticks?security=',security,'" class="future-item">',
+                '<div class="name-con con"><span style="font-weight: bold;">',kind_name_rel[kind],'</span></div>',
+                '<div class="word-con con"><span>pp: ',item.priceposi,'</span></div>',
+                '<div class="word-con con"><span>va: ',item.volumearrow,'</span></div>',
+                '<div class="word-con con"><span>ra: ',rate,'</span></div>',
+            '</a>'].join(''));
+        }
+        setTimeout(function() {
+            location.reload();
+        }, 60000*2)
+    }(jQuery, window));
+</script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>asking list</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+    <style>
+        .container {
+            padding: 0;
+            margin: 0;
+            max-width: 100%;
+        }
+        .trade-item {
+            padding: 18px 20px;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+        }
+        .trade-item .con {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .trade-item .btn-con {
+            padding: 5px 20px;
+            margin-right: 10px;
+            color: #fff;
+            background: #fa6565;
+            border-radius: 4px;
+            box-shadow: 0 0 10px 0 #aaa;
+        }
+        .trade-item .title-con {
+            font-weight: bold;
+            padding: 14px 34px;
+            font-size: 16px;
+            position: absolute;
+            right: 0;
+            top: 9px;
+        }
+        .trade-item.empty {
+            height: 70px;
+            padding: 18px 20px;
+        }
+        .trade-item.empty .title-con {
+            position: relative;
+            padding: 0;
+            top: 0px;
+            left: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!--<div class="trade-item empty">
+        <div class="title-con con"><span class="word">没有记录</span></div>
+    </div>
+    <div class="trade-item">
+        <a href="" class="btn-con con"><span class="word">Permit</span></a>
+        <a href="" class="btn-con con"><span class="word">Deny</span></a>
+        <div class="title-con con"><span class="word">rb</span></div>
+    </div>-->
+</div>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/popper.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/moment.min.js"></script>
+<script>
+    var asking_data = JSON.parse('{{asking_data}}'.replace(/&#34;/g, '"'));
+    var count = 0;
+    for(var security in asking_data) {
+        if(!asking_data.hasOwnProperty(security)) continue;
+        var item = asking_data[security];
+        var permit_url = 'http://212.64.7.83:5288/action_permit_trade?security=' + security;
+        var deny_url = 'http://212.64.7.83:5288/action_deny_trade?security=' + security;
+        var html = [
+            '<div class="trade-item">',
+                '<a href="',permit_url,'" class="btn-con con permit"><span class="word">Permit</span></a>',
+                '<a href="',deny_url,'" class="btn-con con deny"><span class="word">Deny</span></a>',
+                '<div class="title-con con"><span class="word">[',moment(item.nowTimeString).format('MM-DD HH:mm'),']:',item.action,' ',item.security.substring(0,2),'</span></div>',
+            '</div>'
+        ].join('')
+        $('.container').append(html);
+        count++;
+    }
+    if(!count) {
+        var empty_html = [
+            '<div class="trade-item empty">',
+                '<a href="javascript:;" class="btn-con con empty" style="margin-right: 10px"><span class="word">Reload</span></a>',
+                '<div class="title-con con"><span class="word">没有记录</span></div>',
+            '</div>'
+        ].join('');
+        $('.container').append(empty_html);
+    }
+    $('a.permit, a.deny').on('click', function() {
+        setTimeout(function () {
+            location.reload();
+        }, 2000);
+    });
+    $('a.empty').on('click', function() {
+        location.reload()
+    });
+</script>
+</body>
+</html>
