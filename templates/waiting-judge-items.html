@@ -69,8 +69,8 @@
     for(var security in asking_data) {
         if(!asking_data.hasOwnProperty(security)) continue;
         var item = asking_data[security];
-        var permit_url = 'http://212.64.7.83:5288/action_permit_trade?security=' + security;
-        var deny_url = 'http://212.64.7.83:5288/action_deny_trade?security=' + security;
+        var permit_url = 'http://107.182.31.161:5288/action_permit_trade?security=' + security;
+        var deny_url = 'http://107.182.31.161:5288/action_deny_trade?security=' + security;
         var html = [
             '<div class="trade-item">',
                 '<a href="',permit_url,'" class="btn-con con permit"><span class="word">Permit</span></a>',
