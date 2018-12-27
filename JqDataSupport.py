@@ -40,6 +40,10 @@ class SupportJqData():
         return df
 
     def getPricePosi(self, df):
+        arr = self.getPricePosis(df)
+        return arr[-1]
+
+    def getPricePosis(self, df):
         indexList = df[df.EMA60 == df.EMA60].index.tolist()
         pricePositions = []
         for index in indexList:
@@ -54,7 +58,7 @@ class SupportJqData():
                     break
                 pricePosi = pricePosi + 1
             pricePositions.append(pricePosi)
-        return pricePositions[-1]
+        return pricePositions
 
     def getRate(self, df):
         indexList = df[df.EMA60 == df.EMA60].index.tolist()

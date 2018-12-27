@@ -17,7 +17,7 @@ def index():
           'M9999.XDCE', 'PP9999.XDCE', 'V9999.XDCE', 'HC9999.XSGE', 'RB9999.XSGE', 'FU9999.XSGE', 'BU9999.XSGE']
     retArr = []
     for fu in fs:
-        df = supportJqData.getDataFrame(security=fu, frequency='15m')
+        df = supportJqData.getDataFrame(security=fu, frequency='5m')
         priceposi = supportJqData.getPricePosi(df)
         volumearrow = supportJqData.getVolumeArrow(df)
         rate = supportJqData.getRate(df)
@@ -30,6 +30,28 @@ def index():
         retArr.append({'security': fu, 'rate': rate, 'priceposi': priceposi, 'volumearrow': volumearrow, 'value': value})
 
     return render_template('index.html', title='listener', data=json.dumps(retArr))
+
+@app.route('/list_waiting_items')
+def list_waiting_items():
+    fs = ['CF9999.XZCE', 'MA9999.XZCE', 'RM9999.XZCE', 'SF9999.XZCE', 'SM9999.XZCE',
+          'TA9999.XZCE', 'ZC9999.XZCE', 'AP9999.XZCE', 'JM9999.XDCE', 'L9999.XDCE',
+          'M9999.XDCE', 'PP9999.XDCE', 'V9999.XDCE', 'HC9999.XSGE', 'RB9999.XSGE', 'FU9999.XSGE', 'BU9999.XSGE']
+    retArr = []
+    for fu in fs:
+        df = supportJqData.getDataFrame(security=fu, frequency='5m')
+        priceposis = supportJqData.getPricePosis(df)
+        i = 0
+        count = 0
+        while i < priceposis.__len__():
+            posi = priceposis[-i - 1]
+            if posi == 0 or posi == 4:
+                break
+            count = count + 1
+            i = i + 1
+        retArr.append({'security': fu, 'count': count})
+        print(str({'security': fu, 'count': count}))
+
+    return render_template('list_waiting_items.html', title='list_waiting_items', data=json.dumps(retArr))
 
 #上期所
 #
@@ -113,7 +135,3 @@ def action_deny_trade():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5288)
-    #security = "HC9999.XSGE"
-    #df = getDataFrame(security=security, frequency='5m')
-    # print getPricePosi(df)
-    #print security + ": va->" + str(getVolumeArrow(df)) + " pp->" + str(getPricePosi(df))
