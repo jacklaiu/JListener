@@ -95,7 +95,7 @@ def candle_sticks():
     endtime = str(args.get('endtime'))
     nowTimeString = util.getYMDHMS()
     if frequency is None or frequency == 'None':
-        frequency = '15m'
+        frequency = '5m'
     if endtime is not None and endtime != '':
         df = supportJqData.getDataFrame(security=security, frequency=frequency, count=130, end_date=endtime)
     else:
